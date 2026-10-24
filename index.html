@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XL2DOC — Excel to Word Converter</title>
+  <meta name="description" content="Convert Excel spreadsheets to beautifully formatted Word documents instantly in your browser. No uploads, fully private, free." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Background blobs -->
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="logo-text">XL<span class="accent">2</span>DOC</span>
+      </div>
+      <nav class="header-nav">
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+          <span class="theme-icon sun">☀️</span>
+          <span class="theme-icon moon">🌙</span>
+          <div class="toggle-thumb"></div>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      100% Browser-based · No uploads · Fully Private
+    </div>
+    <h1 class="hero-title">
+      Convert Excel to<br/>
+      <span class="gradient-text">Word Documents</span>
+    </h1>
+    <p class="hero-sub">
+      Upload your Excel file and get a beautifully formatted Word document with
+      styled tables, multiple sheets, custom headers &amp; footers — instantly.
+    </p>
+  </section>
+
+  <!-- Main App -->
+  <main class="app-container">
+
+    <!-- Step 1: Upload -->
+    <section id="stepUpload" class="step-card active">
+      <div class="step-number">01</div>
+      <h2 class="step-title">Upload Excel File</h2>
+
+      <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Upload Excel file">
+        <div class="drop-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="17,8 12,3 7,8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="drop-title">Drag &amp; drop your Excel file here</p>
+        <p class="drop-sub">or click to browse — supports <strong>.xlsx</strong> and <strong>.xls</strong></p>
+        <button class="btn btn-primary" id="browseBtn">Browse Files</button>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" hidden />
+      </div>
+
+      <div id="fileInfo" class="file-info hidden">
+        <div class="file-icon">📊</div>
+        <div class="file-details">
+          <span id="fileName" class="file-name"></span>
+          <span id="fileSize" class="file-size"></span>
+        </div>
+        <button id="removeFile" class="btn-icon" aria-label="Remove file">✕</button>
+      </div>
+    </section>
+
+    <!-- Step 2: Configure -->
+    <section id="stepConfigure" class="step-card">
+      <div class="step-number">02</div>
+      <h2 class="step-title">Configure Document</h2>
+
+      <div class="config-grid">
+        <!-- Document Info -->
+        <div class="config-group">
+          <h3 class="config-section-title">📄 Document Info</h3>
+          <div class="form-row">
+            <label class="form-label" for="docTitle">Document Title</label>
+            <input type="text" id="docTitle" class="form-input" placeholder="My Report" />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="docAuthor">Author</label>
+            <input type="text" id="docAuthor" class="form-input" placeholder="Your Name" />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="docSubject">Subject / Description</label>
+            <input type="text" id="docSubject" class="form-input" placeholder="Generated from Excel data" />
+          </div>
+        </div>
+
+        <!-- Header & Footer -->
+        <div class="config-group">
+          <h3 class="config-section-title">🗒️ Header &amp; Footer</h3>
+          <div class="form-row">
+            <label class="form-label" for="headerText">Header Text</label>
+            <input type="text" id="headerText" class="form-input" placeholder="Company Name / Report Title" />
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="footerText">Footer Text</label>
+            <input type="text" id="footerText" class="form-input" placeholder="Confidential · Page {n}" />
+          </div>
+          <div class="toggle-row">
+            <label class="toggle-label" for="includeDate">Include date in header</label>
+            <label class="switch">
+              <input type="checkbox" id="includeDate" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Table Style -->
+        <div class="config-group">
+          <h3 class="config-section-title">🎨 Table Style</h3>
+          <div class="style-picker">
+            <label class="style-option" id="styleBlue">
+              <input type="radio" name="tableStyle" value="blue" checked />
+              <div class="style-preview blue-style">
+                <div class="sp-header"></div>
+                <div class="sp-row"></div>
+                <div class="sp-row alt"></div>
+              </div>
+              <span>Ocean Blue</span>
+            </label>
+            <label class="style-option" id="styleGreen">
+              <input type="radio" name="tableStyle" value="green" />
+              <div class="style-preview green-style">
+                <div class="sp-header"></div>
+                <div class="sp-row"></div>
+                <div class="sp-row alt"></div>
+              </div>
+              <span>Forest Green</span>
+            </label>
+            <label class="style-option" id="stylePurple">
+              <input type="radio" name="tableStyle" value="purple" />
+              <div class="style-preview purple-style">
+                <div class="sp-header"></div>
+                <div class="sp-row"></div>
+                <div class="sp-row alt"></div>
+              </div>
+              <span>Royal Purple</span>
+            </label>
+            <label class="style-option" id="styleGray">
+              <input type="radio" name="tableStyle" value="gray" />
+              <div class="style-preview gray-style">
+                <div class="sp-header"></div>
+                <div class="sp-row"></div>
+                <div class="sp-row alt"></div>
+              </div>
+              <span>Classic Gray</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Sheet Selection -->
+        <div class="config-group">
+          <h3 class="config-section-title">📑 Sheet Selection</h3>
+          <p class="config-hint">Choose which sheets to include:</p>
+          <div id="sheetList" class="sheet-list">
+            <p class="placeholder-text">Upload a file to see sheets</p>
+          </div>
+          <div class="toggle-row">
+            <label class="toggle-label" for="pageBreaks">Page break between sheets</label>
+            <label class="switch">
+              <input type="checkbox" id="pageBreaks" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Page Layout -->
+        <div class="config-group">
+          <h3 class="config-section-title">📐 Page Layout</h3>
+          <div class="form-row">
+            <label class="form-label">Orientation</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="orientation" value="portrait" checked /> Portrait
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="orientation" value="landscape" /> Landscape
+              </label>
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="fontSize">Font Size</label>
+            <select id="fontSize" class="form-input form-select">
+              <option value="9">9pt (Compact)</option>
+              <option value="10">10pt</option>
+              <option value="11" selected>11pt (Default)</option>
+              <option value="12">12pt</option>
+              <option value="14">14pt (Large)</option>
+            </select>
+          </div>
+          <div class="toggle-row">
+            <label class="toggle-label" for="boldHeaders">Bold first row as header</label>
+            <label class="switch">
+              <input type="checkbox" id="boldHeaders" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Additional Options -->
+        <div class="config-group">
+          <h3 class="config-section-title">⚙️ Additional Options</h3>
+          <div class="toggle-row">
+            <label class="toggle-label" for="includeSheetName">Show sheet name as section heading</label>
+            <label class="switch">
+              <input type="checkbox" id="includeSheetName" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <label class="toggle-label" for="stripEmpty">Skip empty rows &amp; columns</label>
+            <label class="switch">
+              <input type="checkbox" id="stripEmpty" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <label class="toggle-label" for="includeSummary">Add summary page at start</label>
+            <label class="switch">
+              <input type="checkbox" id="includeSummary" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button id="convertBtn" class="btn btn-primary btn-large" disabled>
+          <span class="btn-icon-l">⚡</span>
+          Convert to Word
+        </button>
+      </div>
+    </section>
+
+    <!-- Step 3: Preview & Download -->
+    <section id="stepResult" class="step-card">
+      <div class="step-number">03</div>
+      <h2 class="step-title">Preview &amp; Download</h2>
+
+      <div id="previewArea" class="preview-area">
+        <div class="preview-toolbar">
+          <div class="preview-info">
+            <span id="previewSheetCount" class="preview-stat"></span>
+            <span id="previewRowCount" class="preview-stat"></span>
+          </div>
+          <div class="preview-controls">
+            <button id="prevSheet" class="btn btn-sm">← Prev Sheet</button>
+            <span id="sheetIndicator" class="sheet-indicator"></span>
+            <button id="nextSheet" class="btn btn-sm">Next Sheet →</button>
+          </div>
+        </div>
+        <div id="previewContent" class="preview-content"></div>
+      </div>
+
+      <div class="download-section">
+        <div class="download-card">
+          <div class="download-icon">📄</div>
+          <div class="download-info">
+            <span id="outputFileName" class="output-filename"></span>
+            <span id="outputStats" class="output-stats"></span>
+          </div>
+          <button id="downloadBtn" class="btn btn-success btn-large">
+            <span>⬇️</span> Download .docx
+          </button>
+        </div>
+        <button id="startOver" class="btn btn-ghost">↩ Convert another file</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Progress Overlay -->
+  <div id="progressOverlay" class="progress-overlay hidden">
+    <div class="progress-card">
+      <div class="progress-spinner"></div>
+      <p id="progressText" class="progress-text">Processing…</p>
+      <div class="progress-bar-wrap">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>XL2DOC &mdash; Built with ❤️ &nbsp;|&nbsp; All processing is done locally in your browser</p>
+  </footer>
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
